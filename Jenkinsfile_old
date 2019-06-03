@@ -1,0 +1,56 @@
+pipeline {
+  agent any
+  environment {
+    EXTRA= "/usr/local/bin:/opt/chefdk/bin:/Users/eljeffe/.chefdk/gem/ruby/2.6.0/bin:/opt/chefdk/embedded/bin"
+      }
+  stages {
+    
+    stage('Setup') {
+      steps {
+        withEnv(["PATH+EXTRA=$EXTRA"]) {
+        sh 'echo $0'
+        sh 'echo $PATH'
+        sh 'chef shell-init sh'
+        sh 'echo "Versions: "'
+        sh 'chef --version'
+        sh 'rubocop --version'
+        sh 'foodcritic --version'
+        sh 'echo "Updating Berkshelf: "'
+        sh 'if [ ! -f Policyfile.rb ]; then chef install Policyfile.rb; else echo nothing; fi;'
+      }
+    }
+  }
+
+stage('Acceptance Testing') {
+      steps {
+        withEnv(["PATH+EXTRA=$EXTRA"]) {
+            sh 'echo "Starting chefstyle (rubocop): "'
+            sh 'rubocop --color'
+            sh 'echo "Starting foodcritic: "'
+            sh 'foodcritic . --tags -FC078'
+            sh 'echo Starting ChefSpec: '
+            sh 'chef exec rspec'
+          }
+        }
+      }
+    
+
+
+    stage('Test Kitchen') {
+      steps {
+        withEnv(["PATH+EXTRA=$EXTRA"]) {
+        sh 'kitchen test -d always --color'
+      }
+    }
+  }
+}
+
+  post {
+    success {
+      echo "Berks Upload"
+    }
+    failure {
+      echo "The build failed"
+    }
+  }
+}

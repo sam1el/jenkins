@@ -1,0 +1,12 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: centos-7
+
+suites:
+  - name: default

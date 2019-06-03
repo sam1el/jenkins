@@ -1,0 +1,13 @@
+name 'jenkins'
+maintainer 'Jeff Brimager'
+maintainer_email 'jbrimager@chef.io'
+license 'Proprietary - All Rights Reserved'
+description 'Installs/Configures jenkins'
+long_description 'Installs/Configures jenkins'
+version '0.3.5'
+chef_version '>= 14.0'
+issues_url 'https://gitlab.com/jbrimager/jenkins/issues'
+source_url 'https://gitlab.com/jbrimager/jenkin'
+
+supports 'ubuntu'
+supports 'centos'
