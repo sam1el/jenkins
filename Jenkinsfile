@@ -37,12 +37,21 @@ stage('Acceptance Testing') {
       
     stage('Test Kitchen') {
       steps {
-        powershell('''kitchen test -d always --color''')
+        sh 'kitchen test -d always --color'
       }
     }
   }
-}
 
+
+  post {
+    success {
+      echo "Berks Upload"
+     }
+    failure {
+      echo "The build failed"
+    }
+  }
+}
     // stage('Merge to master') {
     //    when {
     //      expression {
@@ -83,12 +92,3 @@ stage('Acceptance Testing') {
     //         }
     //       }
     //     }
-
-  post {
-    success {
-      echo 'test'
-    }
-    failure {
-      echo "The build failed"
-    }
-  }
